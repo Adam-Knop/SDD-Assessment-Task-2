@@ -14,7 +14,7 @@ ctk.set_default_color_theme("blue")
 root = ctk.CTk()
 root.geometry("1000x600")
 root.title("Summing Program")
-root.resizable(width=False, height=True)
+root.resizable(width=True, height=True)
 #Setting window size
 minwidth = 800
 minheight = 700
@@ -97,6 +97,11 @@ def Calculate():
 
 
 
+
+#Adding an output label
+
+output_label = ctk.CTkLabel(label_frame)
+output_label.grid(row=16, column=1, padx=10)
 #Adding Calculate and clear buttons
 calculate_Button = ctk.CTkButton(master=label_frame, text="Calculate", command=Calculate)
 calculate_Button.grid(row=14, column=1, pady=10, padx=10)
