@@ -3,6 +3,7 @@
 import tkinter as tk
 import customtkinter as ctk
 import googletrans
+import textblob
 
 #Setting customTkinter theme
 ctk.set_appearance_mode("System")  
@@ -89,7 +90,20 @@ OptionLabel2.grid(row=12, column=1, padx=10)
 blank1 = ctk.CTkLabel(left_frame, text= " ")
 blank1.grid(row=11, column=1, padx=10, pady=10)
 
+
+
+#Creating Translate button
+languages = 4
+
+translate_option = ctk.CTkOptionMenu(left_frame, values=["languages"])
+translate_option.grid(row=16,column=1, padx=3, pady=10)
+OptionLabel2 = ctk.CTkLabel(left_frame, text= "Appearance Mode")
+OptionLabel2.grid(row=12, column=1, padx=10)
+
+#Calculations
 def Calculate():
+    if numberOfTerms.get() == '' or numberOfTerms.get() <= 0 or commonDifference <= 0 or commonDifference == '':
+        output_label.configure(text="enter a positive number")
     if Calc == "Arithmetic":
         pass
     else:
