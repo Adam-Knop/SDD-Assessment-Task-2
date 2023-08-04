@@ -40,6 +40,14 @@ firstTermLabel = ctk.CTkLabel(label_frame, text= "Enter First Term")
 commonDifferenceLabel = ctk.CTkLabel(label_frame, text= "Enter Common Ratio")
 numberOfTermsLabel = ctk.CTkLabel(label_frame, text= "Enter Number of Terms")
 
+
+
+#Inserting a float value into entries
+firstTerm.insert(0, 0.0)
+numberOfTerms.insert(0, 0.0)
+commonDifference.insert(0, 0.0)
+
+#Positioning labels
 numberOfTermsLabel.grid(row=7, column=0, padx=5, pady=10)
 numberOfTerms.grid(row=7, column=1, padx=5, pady=10)
 
@@ -51,22 +59,24 @@ firstTermLabel.grid(row=6, column=0, padx=5, pady=10)
 firstTerm.grid(row=6, column=1, padx=5, pady=10)
 
 #Creating segmented button
+Calc = "Arithmetic"
 def segmented_button_callback(value):
     global Calc
     print("segmented button clicked:", value)
     Calc = value
 
-segemented_button_var = ctk.StringVar(value="Value 1")
+
+
+segemented_button_var = ctk.StringVar(value="Arithmetic")
 segemented_button = ctk.CTkSegmentedButton(label_frame, values=["Arithmetic", "Geometric"], command=segmented_button_callback, variable=segemented_button_var)
 segemented_button.grid(row=0, column=1, padx=50, pady=20)
-def bombastic():
-    pass
+
 #Creating scaling options
 def change_scaling_event(selection):
     scale = int(selection.strip('%')) / 100
     ctk.set_widget_scaling(scale)
 
-optionmenu_1 = ctk.CTkOptionMenu(left_frame, values=["50%", "75%", "100%", "125%", "150%", "200%", "300%"], command=change_scaling_event)
+optionmenu_1 = ctk.CTkOptionMenu(left_frame, values=["50%", "75%", "100%", "125%", "150%"], command=change_scaling_event)
 optionmenu_1.grid(row=10, column=1, padx=50, pady=0)
 optionmenu_1.set("100%")
 OptionLabel = ctk.CTkLabel(left_frame, text= "UI Scaling")
@@ -101,26 +111,55 @@ OptionLabel2 = ctk.CTkLabel(left_frame, text= "Appearance Mode")
 OptionLabel2.grid(row=12, column=1, padx=10)
 
 #Calculations
-def Calculate():
-    if numberOfTerms.get() == '' or numberOfTerms.get() <= 0 or commonDifference <= 0 or commonDifference == '':
-        output_label.configure(text="enter a positive number")
-    if Calc == "Arithmetic":
-        pass
-    else:
-        pass
-
-
-
 
 #Adding an output label
 
-output_label = ctk.CTkLabel(label_frame)
-output_label.grid(row=16, column=1, padx=10)
+output_label = ctk.CTkLabel(label_frame, text= " ")
+output_label.grid(row=16, column=1, padx=10)    
+
+calculate_button_pressed = False
+
+def Calculate():
+    # Set the calculate_button_pressed variable to True to indicate that the "Calculate" button has been pressed
+    global calculate_button_pressed
+    calculate_button_pressed = True
+
+    if numberOfTerms.get() == '':
+        output_label.configure(text="Number of terms must be positive")
+    elif commonDifference.get() != '0.0' and int(float(commonDifference.get())) <= 0:
+        output_label.configure(text="Common difference must be a postive value")
+    elif firstTerm.get() != '' and numberOfTerms.get() != '' and commonDifference.get() != '':
+        if Calc == "Arithmetic":
+            global answer
+            answer = 0
+            for i in range(int(float(firstTerm.get()))):
+                answer += (int(numberOfTerms.get()) / 2) * (2 * int(firstTerm.get())) + int(numberOfTerms.get()) - 1 * int(commonDifference.get())
+            output_label.configure(text="Sum of AP is: " + str(answer))
+        else:
+            answer = 0
+            for i in range(int(float(numberOfTerms.get()))):
+                answer += int(firstTerm.get()) ** int(commonDifference.get())
+            output_label.configure(text="Sum of GP is: " + str(answer))
+
+# Modify the code that creates the output_label to only display it if the "Calculate" button has been pressed
+if calculate_button_pressed:
+    output_label = ctk.CTkLabel(label_frame, text= " ")
+    output_label.grid(row=16, column=1, padx=10)
+Calculate()
+
 #Adding Calculate and clear buttons
 calculate_Button = ctk.CTkButton(master=label_frame, text="Calculate", command=Calculate)
 calculate_Button.grid(row=14, column=1, pady=10, padx=10)
-clear_Button = ctk.CTkButton(master=label_frame, text="Clear")
+
+def clear_entries():
+    firstTerm.delete(0, 'end')
+    commonDifference.delete(0, 'end')
+    numberOfTerms.delete(0, 'end')
+    output_label.configure(text="")
+
+clear_Button = ctk.CTkButton(master=label_frame, text="Clear", command=clear_entries)
 clear_Button.grid(row=15, column=1, pady=10, padx=10)
+clear_entries()
 
 
 
