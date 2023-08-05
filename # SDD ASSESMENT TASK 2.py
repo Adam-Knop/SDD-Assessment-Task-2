@@ -37,7 +37,7 @@ commonDifference = ctk.CTkEntry(label_frame)
 numberOfTerms = ctk.CTkEntry(label_frame)
 
 firstTermLabel = ctk.CTkLabel(label_frame, text= "Enter First Term")
-commonDifferenceLabel = ctk.CTkLabel(label_frame, text= "Enter Common Ratio")
+commonDifferenceLabel = ctk.CTkLabel(label_frame, text= "Enter Common Difference")
 numberOfTermsLabel = ctk.CTkLabel(label_frame, text= "Enter Number of Terms")
 
 
@@ -125,16 +125,22 @@ def Calculate():
     calculate_button_pressed = True
 
     if numberOfTerms.get() == '':
-        output_label.configure(text="Number of terms must be positive")
-    elif commonDifference.get() != '0.0' and int(float(commonDifference.get())) <= 0:
-        output_label.configure(text="Common difference must be a postive value")
+        output_label.configure(text="Please enter a number")
+    elif int(float(commonDifference.get())) == 0:
+        output_label.configure(text="Enter a non-zero value")
     elif firstTerm.get() != '' and numberOfTerms.get() != '' and commonDifference.get() != '':
         if Calc == "Arithmetic":
             global answer
-            answer = 0
-            for i in range(int(float(firstTerm.get()))):
-                answer += (int(numberOfTerms.get()) / 2) * (2 * int(firstTerm.get())) + int(numberOfTerms.get()) - 1 * int(commonDifference.get())
-            output_label.configure(text="Sum of AP is: " + str(answer))
+            answer=0
+            n = float(numberOfTerms.get())
+            if n.is_integer() and n >=0:
+                n = int(n)
+                a = float(firstTerm.get())
+                d = float(commonDifference.get())
+                answer = (n / 2) * (2 * a + (n - 1) * d)
+                output_label.configure(text="Sum of AP is: " + str(answer))
+            else:
+                output_label.configure(text="Error: The number of terms must be a positive integer value.")
         else:
             answer = 0
             for i in range(int(float(numberOfTerms.get()))):
