@@ -1,6 +1,7 @@
 # SDD ASSESMENT TASK 2
 
 import tkinter as tk
+from tkinter import messagebox
 import customtkinter as ctk
 import googletrans
 import textblob
@@ -36,9 +37,9 @@ firstTerm = ctk.CTkEntry(label_frame)
 commonDifference = ctk.CTkEntry(label_frame)
 numberOfTerms = ctk.CTkEntry(label_frame)
 
-firstTermLabel = ctk.CTkLabel(label_frame, text= "Enter First Term")
-commonDifferenceLabel = ctk.CTkLabel(label_frame, text= "Enter Common Difference")
-numberOfTermsLabel = ctk.CTkLabel(label_frame, text= "Enter Number of Terms")
+firstTermLabel = ctk.CTkLabel(label_frame, text= "Enter First Term:")
+commonDifferenceLabel = ctk.CTkLabel(label_frame, text= "Enter Common Difference:")
+numberOfTermsLabel = ctk.CTkLabel(label_frame, text= "Enter Number of Terms:")
 
 
 
@@ -91,7 +92,23 @@ title_label.grid(row=2, column=1, padx=20, pady=30)
 
 #Creating Appearance selection
 def Appearance(selection):
-    pass
+    current_mode = ctk.get_appearance_mode()
+    if optionmenu_2.get() == "Light":
+        if current_mode == "light":
+            messagebox.showerror("Error", "The theme is already set to Light.")
+        else:
+            ctk.set_appearance_mode("light")
+    elif optionmenu_2.get() == "Dark":
+        if current_mode == "dark":
+            messagebox.showerror("Error", "The theme is already set to Dark.")
+        else:
+            ctk.set_appearance_mode("dark")
+    elif optionmenu_2.get() == "System":
+        if current_mode == "system":
+            messagebox.showerror("Error", "The theme is already set to System.")
+        else:
+            ctk.set_appearance_mode("system")
+
 optionmenu_2 = ctk.CTkOptionMenu(left_frame, values=["System", "Light", "Dark", "Green"], command=Appearance)
 optionmenu_2.grid(row=13, column=1, padx=40, pady=0)
 optionmenu_2.set("Default")
@@ -120,7 +137,7 @@ output_label.grid(row=16, column=1, padx=10)
 calculate_button_pressed = False
 
 def Calculate():
-    # Set the calculate_button_pressed variable to True to indicate that the "Calculate" button has been pressed
+    # Creating a variable for when calculate button is pressed
     global calculate_button_pressed
     calculate_button_pressed = True
 
@@ -143,8 +160,10 @@ def Calculate():
                 output_label.configure(text="Error: The number of terms must be a positive integer value.")
         else:
             answer = 0
-            for i in range(int(float(numberOfTerms.get()))):
-                answer += int(firstTerm.get()) ** int(commonDifference.get())
+            n = int(float(numberOfTerms.get()))
+            a = float(firstTerm.get())
+            r = float(commonDifference.get())
+            answer = a * (r**n - 1) / (r - 1)
             output_label.configure(text="Sum of GP is: " + str(answer))
 
 # Modify the code that creates the output_label to only display it if the "Calculate" button has been pressed
