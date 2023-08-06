@@ -159,12 +159,16 @@ def Calculate():
             else:
                 output_label.configure(text="Error: The number of terms must be a positive integer value.")
         else:
-            answer = 0
             n = int(float(numberOfTerms.get()))
-            a = float(firstTerm.get())
-            r = float(commonDifference.get())
-            answer = a * (r**n - 1) / (r - 1)
-            output_label.configure(text="Sum of GP is: " + str(answer))
+            answer = 0
+            if n.is_integer() and n >=0:
+                n = int(float(numberOfTerms.get()))
+                a = float(firstTerm.get())
+                r = float(commonDifference.get())
+                answer = a * (r**n - 1) / (r - 1)
+                output_label.configure(text="Sum of GP is: " + str(answer))
+            else:
+                output_label.configure(text="Error: Number of terms must be a positive integer")
 
 # Modify the code that creates the output_label to only display it if the "Calculate" button has been pressed
 if calculate_button_pressed:
@@ -185,16 +189,6 @@ def clear_entries():
 clear_Button = ctk.CTkButton(master=label_frame, text="Clear", command=clear_entries)
 clear_Button.grid(row=15, column=1, pady=10, padx=10)
 clear_entries()
-
-
-
-
-
-
-
-
-
-
 
 
 
