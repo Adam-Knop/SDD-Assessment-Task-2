@@ -160,9 +160,10 @@ def Calculate():
                 output_label.configure(text="Error: The number of terms must be a positive integer value.")
         else:
             n = int(float(numberOfTerms.get()))
+            
             answer = 0
-            if n.is_integer() and n >=0:
-                n = int(float(numberOfTerms.get()))
+            n = int(float(numberOfTerms.get()))
+            if n >=0:
                 a = float(firstTerm.get())
                 r = float(commonDifference.get())
                 answer = a * (r**n - 1) / (r - 1)
@@ -179,6 +180,9 @@ Calculate()
 #Adding Calculate and clear buttons
 calculate_Button = ctk.CTkButton(master=label_frame, text="Calculate", command=Calculate)
 calculate_Button.grid(row=14, column=1, pady=10, padx=10)
+
+
+
 
 def clear_entries():
     firstTerm.delete(0, 'end')
