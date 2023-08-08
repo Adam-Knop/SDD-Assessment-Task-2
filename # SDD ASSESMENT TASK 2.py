@@ -66,8 +66,10 @@ def segmented_button_callback(value):
     global Calc
     print("segmented button clicked:", value)
     Calc = value
-
-
+    if Calc == "Geometric":
+        commonDifferenceLabel.configure(text="Enter Common Ratio:")
+    else:
+        commonDifferenceLabel.configure(text="Enter Common Difference:")
 
 segemented_button_var = ctk.StringVar(value="Arithmetic")
 segemented_button = ctk.CTkSegmentedButton(label_frame, values=["Arithmetic", "Geometric"], command=segmented_button_callback, variable=segemented_button_var)
@@ -110,7 +112,7 @@ def Appearance(selection):
         else:
             ctk.set_appearance_mode("system")
 
-optionmenu_2 = ctk.CTkOptionMenu(left_frame, values=["System", "Light", "Dark", "Green"], command=Appearance)
+optionmenu_2 = ctk.CTkOptionMenu(left_frame, values=["System", "Light", "Dark"], command=Appearance)
 optionmenu_2.grid(row=13, column=1, padx=40, pady=0)
 optionmenu_2.set("Default")
 OptionLabel2 = ctk.CTkLabel(left_frame, text= "Appearance Mode")
@@ -119,21 +121,23 @@ blank1 = ctk.CTkLabel(left_frame, text= " ")
 blank1.grid(row=11, column=1, padx=10, pady=10)
 
 
-
-#Creating Translate button
+#Creating a Label for translation
+languages_label = ctk.CTkLabel(left_frame, text="Languages:")
+languages_label.grid(row=16, column=1, pady=5)
+#Creating Translate list
 language_list = list(LANGUAGES.values())
 
 #Create a translate option list
-translate_option = ctk.CTkOptionMenu(left_frame, values=["languages"])
+translate_option = ctk.CTkOptionMenu(left_frame, values=["English"])
 translate_option.configure(values=language_list)
-translate_option.grid(row=16,column=1, padx=3, pady=10)
+translate_option.grid(row=17,column=1, padx=3)
 
 def update_label(*args):
     selected_language = translate_option.get()
     translator = Translator()
     # Translate the text to the selected language
     translated_text = translator.translate("Appearance Mode", dest=selected_language).text
-    #Testing updating a label
+    #Testing updating a
     OptionLabel2.configure(text=translated_text)
 
 # Set the command for the translate_option menu
@@ -145,20 +149,24 @@ translate_option.configure(command=update_label)
 
 output_label = ctk.CTkLabel(label_frame, text= " ")
 output_label.grid(row=16, column=1, padx=10)    
-
 calculate_button_pressed = False
+
+
+
+
 
 def Calculate():
     # Creating a variable for when calculate button is pressed
     global calculate_button_pressed
     calculate_button_pressed = True
-
-    if numberOfTerms.get() == '':
-        output_label.configure(text="Please enter a number")
-    elif float(commonDifference.get()) == 0:
-        output_label.configure(text="Enter a non-zero value")
-    elif firstTerm.get() != '' and numberOfTerms.get() != '' and commonDifference.get() != '':
-        if Calc == "Arithmetic":
+    if firstTerm.get() != '' and numberOfTerms.get() != '' and commonDifference.get() != '':
+        if not firstTerm.get().isnumeric() or not numberOfTerms.get().isnumeric() or not commonDifference.get().isnumeric():
+            output_label.configure(text="Please enter a number")
+        elif Calc == "Arithmetic":
+            if numberOfTerms.get() == '':
+                output_label.configure(text="Please enter a number")
+            elif float(commonDifference.get()) == 0:
+                output_label.configure(text="Enter a non-zero value")
             global answer
             answer=0
             n = float(numberOfTerms.get())
@@ -167,7 +175,10 @@ def Calculate():
                 a = float(firstTerm.get())
                 d = float(commonDifference.get())
                 answer = (n / 2) * (2 * a + (n - 1) * d)
-                output_label.configure(text="Sum of AP is: " + str(answer))
+                if answer < 9.9e+300:
+                    output_label.configure(text="Sum of AP is: " + str(answer))
+                else:
+                    output_label.configure(text="Error: Value is too large")
             else:
                 output_label.configure(text="Error: The number of terms must be a positive integer value.")
         else:
@@ -179,14 +190,20 @@ def Calculate():
                     n = float(n)
                     a = float(firstTerm.get())
                     answer = a * (r**n - 1) / (r - 1)
-                    output_label.configure(text="Sum of GP is: " + str(answer))
+                    if answer < 9.9e+300:
+                        output_label.configure(text="Sum of GP is: " + str(answer))
+                    else:
+                        output_label.configure(text="Error: number too large")
                 else:
                     output_label.configure(text="Error: Number of terms must be a positive integer")
             else: 
                 n = float(n)
                 a = float(firstTerm.get())
                 answer = n**a
-                output_label.configure(text="Sum of GP is: " + str(answer))
+                if answer < 9.9e+300:
+                    output_label.configure(text="Sum of GP is: " + str(answer))
+                else:
+                    output_label.configure(text="Error: number too large")
 
 # Modify the code that creates the output_label to only display it if the "Calculate" button has been pressed
 if calculate_button_pressed:
