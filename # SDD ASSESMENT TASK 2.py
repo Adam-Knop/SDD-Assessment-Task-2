@@ -3,7 +3,8 @@
 import tkinter as tk
 from tkinter import messagebox
 import customtkinter as ctk
-import googletrans
+from googletrans import Translator
+from googletrans import LANGUAGES
 import textblob
 
 #Setting customTkinter theme
@@ -120,12 +121,23 @@ blank1.grid(row=11, column=1, padx=10, pady=10)
 
 
 #Creating Translate button
-languages = 4
+language_list = list(LANGUAGES.values())
 
+#Create a translate option list
 translate_option = ctk.CTkOptionMenu(left_frame, values=["languages"])
+translate_option.configure(values=language_list)
 translate_option.grid(row=16,column=1, padx=3, pady=10)
-OptionLabel2 = ctk.CTkLabel(left_frame, text= "Appearance Mode")
-OptionLabel2.grid(row=12, column=1, padx=10)
+
+def update_label(*args):
+    selected_language = translate_option.get()
+    translator = Translator()
+    # Translate the text to the selected language
+    translated_text = translator.translate("Appearance Mode", dest=selected_language).text
+    #Testing updating a label
+    OptionLabel2.configure(text=translated_text)
+
+# Set the command for the translate_option menu
+translate_option.configure(command=update_label)
 
 #Calculations
 
@@ -143,7 +155,7 @@ def Calculate():
 
     if numberOfTerms.get() == '':
         output_label.configure(text="Please enter a number")
-    elif int(float(commonDifference.get())) == 0:
+    elif float(commonDifference.get()) == 0:
         output_label.configure(text="Enter a non-zero value")
     elif firstTerm.get() != '' and numberOfTerms.get() != '' and commonDifference.get() != '':
         if Calc == "Arithmetic":
@@ -159,17 +171,22 @@ def Calculate():
             else:
                 output_label.configure(text="Error: The number of terms must be a positive integer value.")
         else:
-            n = int(float(numberOfTerms.get()))
-            
             answer = 0
-            n = int(float(numberOfTerms.get()))
-            if n >=0:
+            n = float(numberOfTerms.get())
+            r = float(commonDifference.get())
+            if r != 1:
+                if n > 0:
+                    n = float(n)
+                    a = float(firstTerm.get())
+                    answer = a * (r**n - 1) / (r - 1)
+                    output_label.configure(text="Sum of GP is: " + str(answer))
+                else:
+                    output_label.configure(text="Error: Number of terms must be a positive integer")
+            else: 
+                n = float(n)
                 a = float(firstTerm.get())
-                r = float(commonDifference.get())
-                answer = a * (r**n - 1) / (r - 1)
+                answer = n**a
                 output_label.configure(text="Sum of GP is: " + str(answer))
-            else:
-                output_label.configure(text="Error: Number of terms must be a positive integer")
 
 # Modify the code that creates the output_label to only display it if the "Calculate" button has been pressed
 if calculate_button_pressed:
@@ -180,9 +197,6 @@ Calculate()
 #Adding Calculate and clear buttons
 calculate_Button = ctk.CTkButton(master=label_frame, text="Calculate", command=Calculate)
 calculate_Button.grid(row=14, column=1, pady=10, padx=10)
-
-
-
 
 def clear_entries():
     firstTerm.delete(0, 'end')
