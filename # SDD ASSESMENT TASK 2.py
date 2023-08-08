@@ -95,6 +95,7 @@ title_label.grid(row=2, column=1, padx=20, pady=30)
 
 #Creating Appearance selection
 def Appearance(selection):
+    global current_mode
     current_mode = ctk.get_appearance_mode()
     if optionmenu_2.get() == "Light":
         if current_mode == "light":
@@ -120,6 +121,14 @@ OptionLabel2.grid(row=12, column=1, padx=10)
 blank1 = ctk.CTkLabel(left_frame, text= " ")
 blank1.grid(row=11, column=1, padx=10, pady=10)
 
+current_theme = ctk.get_appearance_mode()
+
+if optionmenu_2.get() == "Light":
+    if current_theme == "light":
+        messagebox.showerror("Error", "The theme is already set to Light")
+if optionmenu_2.get() == "Dark":
+    if current_theme == "dark":
+        messagebox.showerror("Error", "The theme is already set to Dark")
 
 #Creating a Label for translation
 languages_label = ctk.CTkLabel(left_frame, text="Languages:")
@@ -165,13 +174,16 @@ def Calculate():
             float(numberOfTerms.get())
             float(commonDifference.get())
         except ValueError:
-            output_label.configure(text="Please enter a number")
+            if calculate_button_pressed:
+                messagebox.showerror("Error", "Please enter a number")
         else:
             if Calc == "Arithmetic":
                 if numberOfTerms.get() == '':
-                    output_label.configure(text="Please enter a number")
+                    if calculate_button_pressed:
+                        messagebox.showerror("Error", "Please enter a number")
                 elif float(commonDifference.get()) == 0:
-                    output_label.configure(text="Enter a non-zero value")
+                    if calculate_button_pressed:
+                        messagebox.showerror("Error", "Enter a non-zero value")
                 global answer
                 answer=0
                 n = float(numberOfTerms.get())
@@ -182,7 +194,8 @@ def Calculate():
                     answer = (n / 2) * (2 * a + (n - 1) * d)
                     output_label.configure(text="Sum of AP is: " + str(answer))
                 else:
-                    output_label.configure(text="Error: The number of terms must be a positive integer.")
+                    if calculate_button_pressed:
+                        messagebox.showerror("Error", "The number of terms must be a positive integer value.")
             else:
                 answer = 0
                 n = float(numberOfTerms.get())
@@ -195,9 +208,11 @@ def Calculate():
                         if answer < 9.9e+300:
                             output_label.configure(text="Sum of GP is: " + str(answer))
                         else:
-                            output_label.configure(text="Error: number too large")
+                            if calculate_button_pressed:
+                                messagebox.showerror("Error", "Number too large")
                     else:
-                        output_label.configure(text="Error: Number of terms must be a positive integer")
+                        if calculate_button_pressed:
+                            messagebox.showerror("Error", "Number of terms must be a positive integer")
                 else: 
                     n = float(n)
                     a = float(firstTerm.get())
@@ -205,15 +220,18 @@ def Calculate():
                     if answer < 9.9e+300:
                         output_label.configure(text="Sum of GP is: " + str(answer))
                     else:
-                        output_label.configure(text="Error: number too large")
+                        if calculate_button_pressed:
+                            messagebox.showerror("Error", "Number too large")
 
 
 
-# Modify the code that creates the output_label to only display it if the "Calculate" button has been pressed
+# Modify the code that  to only display output if the "Calculate" button has been pressed
+if calculate_button_pressed == True:
+    Calculate()
 if calculate_button_pressed:
     output_label = ctk.CTkLabel(label_frame, text= " ")
     output_label.grid(row=16, column=1, padx=10)
-Calculate()
+
 
 #Adding Calculate and clear buttons
 calculate_Button = ctk.CTkButton(master=label_frame, text="Calculate", command=Calculate)
