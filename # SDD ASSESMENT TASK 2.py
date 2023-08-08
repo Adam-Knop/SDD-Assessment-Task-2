@@ -160,50 +160,54 @@ def Calculate():
     global calculate_button_pressed
     calculate_button_pressed = True
     if firstTerm.get() != '' and numberOfTerms.get() != '' and commonDifference.get() != '':
-        if not firstTerm.get().isnumeric() or not numberOfTerms.get().isnumeric() or not commonDifference.get().isnumeric():
+        try:
+            float(firstTerm.get())
+            float(numberOfTerms.get())
+            float(commonDifference.get())
+        except ValueError:
             output_label.configure(text="Please enter a number")
-        elif Calc == "Arithmetic":
-            if numberOfTerms.get() == '':
-                output_label.configure(text="Please enter a number")
-            elif float(commonDifference.get()) == 0:
-                output_label.configure(text="Enter a non-zero value")
-            global answer
-            answer=0
-            n = float(numberOfTerms.get())
-            if n.is_integer() and n >=0:
-                n = int(n)
-                a = float(firstTerm.get())
-                d = float(commonDifference.get())
-                answer = (n / 2) * (2 * a + (n - 1) * d)
-                if answer < 9.9e+300:
+        else:
+            if Calc == "Arithmetic":
+                if numberOfTerms.get() == '':
+                    output_label.configure(text="Please enter a number")
+                elif float(commonDifference.get()) == 0:
+                    output_label.configure(text="Enter a non-zero value")
+                global answer
+                answer=0
+                n = float(numberOfTerms.get())
+                if n.is_integer() and n >=0:
+                    n = int(n)
+                    a = float(firstTerm.get())
+                    d = float(commonDifference.get())
+                    answer = (n / 2) * (2 * a + (n - 1) * d)
                     output_label.configure(text="Sum of AP is: " + str(answer))
                 else:
-                    output_label.configure(text="Error: Value is too large")
+                    output_label.configure(text="Error: The number of terms must be a positive integer.")
             else:
-                output_label.configure(text="Error: The number of terms must be a positive integer value.")
-        else:
-            answer = 0
-            n = float(numberOfTerms.get())
-            r = float(commonDifference.get())
-            if r != 1:
-                if n > 0:
+                answer = 0
+                n = float(numberOfTerms.get())
+                r = float(commonDifference.get())
+                if r != 1:
+                    if n > 0:
+                        n = float(n)
+                        a = float(firstTerm.get())
+                        answer = a * (r**n - 1) / (r - 1)
+                        if answer < 9.9e+300:
+                            output_label.configure(text="Sum of GP is: " + str(answer))
+                        else:
+                            output_label.configure(text="Error: number too large")
+                    else:
+                        output_label.configure(text="Error: Number of terms must be a positive integer")
+                else: 
                     n = float(n)
                     a = float(firstTerm.get())
-                    answer = a * (r**n - 1) / (r - 1)
+                    answer = n**a
                     if answer < 9.9e+300:
                         output_label.configure(text="Sum of GP is: " + str(answer))
                     else:
                         output_label.configure(text="Error: number too large")
-                else:
-                    output_label.configure(text="Error: Number of terms must be a positive integer")
-            else: 
-                n = float(n)
-                a = float(firstTerm.get())
-                answer = n**a
-                if answer < 9.9e+300:
-                    output_label.configure(text="Sum of GP is: " + str(answer))
-                else:
-                    output_label.configure(text="Error: number too large")
+
+
 
 # Modify the code that creates the output_label to only display it if the "Calculate" button has been pressed
 if calculate_button_pressed:
