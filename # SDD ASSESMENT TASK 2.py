@@ -176,6 +176,9 @@ def Calculate():
         except ValueError:
             if calculate_button_pressed:
                 messagebox.showerror("Error", "Please enter a number")
+        except StackOverflowError:
+            if calculate_button_pressed:
+                messagebox.showerror("Error", "Please enter a smaller number")            
         else:
             if Calc == "Arithmetic":
                 if numberOfTerms.get() == '':
