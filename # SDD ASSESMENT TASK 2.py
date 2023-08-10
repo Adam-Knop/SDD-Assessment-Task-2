@@ -117,7 +117,7 @@ optionmenu_2 = ctk.CTkOptionMenu(left_frame, values=["System", "Light", "Dark"],
 optionmenu_2.grid(row=13, column=1, padx=40, pady=0)
 optionmenu_2.set("Default")
 OptionLabel2 = ctk.CTkLabel(left_frame, text= "Appearance Mode")
-OptionLabel2.grid(row=12, column=1, padx=10)
+OptionLabel2.grid(row=12, column=1, padx=10)    
 blank1 = ctk.CTkLabel(left_frame, text= " ")
 blank1.grid(row=11, column=1, padx=10, pady=10)
 
@@ -176,9 +176,6 @@ def Calculate():
         except ValueError:
             if calculate_button_pressed:
                 messagebox.showerror("Error", "Please enter a number")
-        except StackOverflowError:
-            if calculate_button_pressed:
-                messagebox.showerror("Error", "Please enter a smaller number")            
         else:
             if Calc == "Arithmetic":
                 if numberOfTerms.get() == '':
@@ -200,22 +197,25 @@ def Calculate():
                     if calculate_button_pressed:
                         messagebox.showerror("Error", "The number of terms must be a positive integer value.")
             else:
-                answer = 0
-                n = float(numberOfTerms.get())
-                r = float(commonDifference.get())
-                if r != 1:
-                    if n > 0:
-                        n = float(n)
-                        a = float(firstTerm.get())
-                        answer = a * (r**n - 1) / (r - 1)
-                        if answer < 9.9e+300:
-                            output_label.configure(text="Sum of GP is: " + str(answer))
+                try:
+                    answer = 0
+                    n = float(numberOfTerms.get())
+                    r = float(commonDifference.get())
+                    if r != 1:
+                        if n > 0:
+                            n = float(n)
+                            a = float(firstTerm.get())
+                            answer = a * (r**n - 1) / (r - 1)
+                            if answer < 9.9e+300:
+                                output_label.configure(text="Sum of GP is: " + str(answer))
+                            else:
+                                if calculate_button_pressed:
+                                    messagebox.showerror("Error", "Overflow Error: Number too large")
                         else:
                             if calculate_button_pressed:
-                                messagebox.showerror("Error", "Number too large")
-                    else:
-                        if calculate_button_pressed:
-                            messagebox.showerror("Error", "Number of terms must be a positive integer")
+                                messagebox.showerror("Error", "Number of terms must be a positive integer")
+                except OverflowError:
+                    messagebox.showerror("Error", "Overflow Error: Number too large")
                 else: 
                     n = float(n)
                     a = float(firstTerm.get())
