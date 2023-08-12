@@ -15,7 +15,7 @@ ctk.set_default_color_theme("blue")
 
 #Creating a window
 root = ctk.CTk()
-root.geometry("1000x600")
+root.geometry("900x400")
 root.title("Summing Program")
 root.resizable(width=True, height=True)
 #Setting window size
@@ -32,7 +32,9 @@ left_frame.grid(row=0, column=0, sticky="nsew")
 root.columnconfigure(1, weight=8)
 root.rowconfigure(0, weight=1)
 root.rowconfigure(1, weight=0)
-
+right_frame = ctk.CTkFrame(root, corner_radius=0)
+right_frame.grid(row=0, column=2, sticky="nsew")
+root.rowconfigure(0, weight=1)
 # Create and grid entry labels and entries
 firstTerm = ctk.CTkEntry(label_frame)
 commonDifference = ctk.CTkEntry(label_frame)
@@ -62,18 +64,22 @@ firstTerm.grid(row=6, column=1, padx=5, pady=10)
 
 #Creating segmented button
 Calc = "Arithmetic"
-def segmented_button_callback(value):
+
+def radio_button_callback():
     global Calc
-    print("segmented button clicked:", value)
-    Calc = value
+    Calc = segemented_button_var.get()
     if Calc == "Geometric":
         commonDifferenceLabel.configure(text="Enter Common Ratio:")
     else:
         commonDifferenceLabel.configure(text="Enter Common Difference:")
 
 segemented_button_var = ctk.StringVar(value="Arithmetic")
-segemented_button = ctk.CTkSegmentedButton(label_frame, values=["Arithmetic", "Geometric"], command=segmented_button_callback, variable=segemented_button_var)
-segemented_button.grid(row=0, column=1, padx=50, pady=20)
+arithmetic_radio_button = ctk.CTkRadioButton(right_frame, text="Arithmetic", variable=segemented_button_var, value="Arithmetic", command=radio_button_callback)
+arithmetic_radio_button.grid(row=3, column=2, padx=50, pady=10)
+geometric_radio_button = ctk.CTkRadioButton(right_frame, text="Geometric", variable=segemented_button_var, value="Geometric", command=radio_button_callback)
+geometric_radio_button.grid(row=4, column=2, padx=50, pady=10)
+rightlabel = ctk.CTkLabel(right_frame, text="Summing Options", font=('Helvetica', 18, 'bold'))
+rightlabel.grid(row=1, column=2, padx=0, pady=20)
 
 #Creating scaling options
 def change_scaling_event(selection):
@@ -162,10 +168,10 @@ calculate_button_pressed = False
 
 
 
-
+#Creating a function for when the calculate button is pressed
 
 def Calculate():
-    # Creating a variable for when calculate button is pressed
+#Calculations
     global calculate_button_pressed
     calculate_button_pressed = True
     if firstTerm.get() != '' and numberOfTerms.get() != '' and commonDifference.get() != '':
