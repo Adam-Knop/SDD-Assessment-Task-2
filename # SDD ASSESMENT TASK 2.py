@@ -208,29 +208,35 @@ def Calculate():
                     n = float(numberOfTerms.get())
                     r = float(commonDifference.get())
                     if r != 1:
-                        if n > 0:
-                            n = float(n)
-                            a = float(firstTerm.get())
-                            answer = a * (r**n - 1) / (r - 1)
-                            if answer < 9.9e+300:
+                        if n > 1:
+                            if r > 1:
+                                n = float(n)
+                                a = float(firstTerm.get())
+                                answer = a * (r**n - 1) / (r - 1)
+                                if answer < 9.9e+300:
+                                    output_label.configure(text="Sum of GP is: " + str(answer))
+                                else:
+                                    if calculate_button_pressed:
+                                        messagebox.showerror("Error", "Overflow Error: Number too large")
+                            elif r < 1 and r > 0:
+                                n = float(n)
+                                a = float(firstTerm.get())
+                                answer = a * (1- r**n) / (1 - r)
                                 output_label.configure(text="Sum of GP is: " + str(answer))
-                            else:
-                                if calculate_button_pressed:
-                                    messagebox.showerror("Error", "Overflow Error: Number too large")
                         else:
                             if calculate_button_pressed:
                                 messagebox.showerror("Error", "Number of terms must be a positive integer")
+                    else: 
+                        n = float(n)
+                        a = float(firstTerm.get())
+                        answer = n**a
+                        if answer < 9.9e+300:
+                            output_label.configure(text="Sum of GP is: " + str(answer))
+                        else:
+                            if calculate_button_pressed:
+                                messagebox.showerror("Error", "Number too large")
                 except OverflowError:
                     messagebox.showerror("Error", "Overflow Error: Number too large")
-                else: 
-                    n = float(n)
-                    a = float(firstTerm.get())
-                    answer = n**a
-                    if answer < 9.9e+300:
-                        output_label.configure(text="Sum of GP is: " + str(answer))
-                    else:
-                        if calculate_button_pressed:
-                            messagebox.showerror("Error", "Number too large")
 
 
 
