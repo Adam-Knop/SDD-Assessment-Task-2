@@ -15,7 +15,7 @@ ctk.set_default_color_theme("blue")
 
 #Creating a window
 root = ctk.CTk()
-root.geometry("900x400")
+root.geometry("1000x400")
 root.title("Summing Program")
 root.resizable(width=True, height=True)
 #Setting window size
@@ -119,9 +119,7 @@ def Appearance(selection):
         else:
             ctk.set_appearance_mode("system")
 
-optionmenu_2 = ctk.CTkOptionMenu(left_frame, values=["System", "Light", "Dark"], command=Appearance)
-optionmenu_2.grid(row=13, column=1, padx=40, pady=0)
-optionmenu_2.set("Default")
+
 OptionLabel2 = ctk.CTkLabel(left_frame, text= "Appearance Mode")
 OptionLabel2.grid(row=12, column=1, padx=10)    
 blank1 = ctk.CTkLabel(left_frame, text= " ")
@@ -129,34 +127,9 @@ blank1.grid(row=11, column=1, padx=10, pady=10)
 
 current_theme = ctk.get_appearance_mode()
 
-if optionmenu_2.get() == "Light":
-    if current_theme == "light":
-        messagebox.showerror("Error", "The theme is already set to Light")
-if optionmenu_2.get() == "Dark":
-    if current_theme == "dark":
-        messagebox.showerror("Error", "The theme is already set to Dark")
 
-#Creating a Label for translation
-languages_label = ctk.CTkLabel(left_frame, text="Languages:")
-languages_label.grid(row=16, column=1, pady=5)
-#Creating Translate list
-language_list = list(LANGUAGES.values())
 
-#Create a translate option list
-translate_option = ctk.CTkOptionMenu(left_frame, values=["English"])
-translate_option.configure(values=language_list)
-translate_option.grid(row=17,column=1, padx=3)
 
-def update_label(*args):
-    selected_language = translate_option.get()
-    translator = Translator()
-    # Translate the text to the selected language
-    translated_text = translator.translate("Appearance Mode", dest=selected_language).text
-    #Testing updating a
-    OptionLabel2.configure(text=translated_text)
-
-# Set the command for the translate_option menu
-translate_option.configure(command=update_label)
 
 #Calculations
 
@@ -262,8 +235,120 @@ clear_Button = ctk.CTkButton(master=label_frame, text="Clear", command=clear_ent
 clear_Button.grid(row=15, column=1, pady=10, padx=10)
 clear_entries()
 
+#Options widget
+Lefttextlabel = ctk.CTkLabel(left_frame, text="Accessibility Options", font=('Helvetica', 18, 'bold'))
+Lefttextlabel.grid(row=8, column=1, pady=10)
+
+#Translation segment
+Translatelabel = ctk.CTkLabel(left_frame, text="Language Options")
+Translatelabel.grid(row=18, column=1, pady=15)
+translator = Translator()
 
 
+def get_supported_languages():
+    language_list = list(LANGUAGES.values())
+    return language_list
+
+translations_map = {
+    "numberOfTermsLabel": "Enter First Term:",
+    "commonDifferenceLabel": "Enter Common Difference:",
+    "Lefttextlabel": "Accessibility Options",
+    "title_label": "AP & GP Calculator",
+    "firstTermLabel": "First Term:",
+    "output_label": "",
+    "Translatelabel": "Language Options",
+    "OptionLabel": "UI Scaling",
+    "OptionLabel2": "Appearance Mode",
+    "geometric_radio_button": "Geometric",
+    "calculate_Button": "Calculate",
+    "clear_Button": "Clear",
+    "arithmetic_radio_button": "Arithmetic",
+    "rightlabel": "Summing Options",
+    "Lefttextlabel": "Accessibility Options",
+    "translate_button": "Apply Changes",
+    "commonDifferenceLabel": "Enter Common Ratio:",
+    "optionmenu_2": {
+        "System": "Translated System",
+        "Light": "Translated Light",
+        "Dark": "Translated Dark"
+    },
+}
+
+def translate_widgets(destination_language):
+    for widget, text in translations_map.items():
+        if widget == "optionmenu_2":
+            menu_ref = optionmenu_2.children["menu_ref"]
+            menu = menu_ref.children["menu"]
+            menu.delete(0, "end")
+            for value, translation in text.items():
+                translated_value = translator.translate(translation, dest=destination_language).text
+                menu.add_command(label=translated_value, command=lambda v=value: optionmenu_2.set(v))
+        else:
+            translated_text = translator.translate(text, dest=destination_language).text
+            globals()[widget].configure(text=translated_text)
+
+def translate_text():
+    selected_language = translated_combo.get()
+    translate_widgets(selected_language)
+
+supported_languages = get_supported_languages()
+translated_combo = ctk.CTkComboBox(left_frame, values=supported_languages)
+translated_combo.grid(row=19, column=1, padx=10, pady=10)
+
+#creating the optionsmenu after the translations so that they can be added to the database
+optionmenu_2 = ctk.CTkOptionMenu(left_frame, values=list(translations_map["optionmenu_2"].values()), command=Appearance)
+optionmenu_2.grid(row=13, column=1, padx=40, pady=0)
+optionmenu_2.set("Default")
+
+if optionmenu_2.get() == "Light":
+    if current_theme == "light":
+        messagebox.showerror("Error", "The theme is already set to Light")
+if optionmenu_2.get() == "Dark":
+    if current_theme == "dark":
+        messagebox.showerror("Error", "The theme is already set to Dark")
+        
+translate_button = ctk.CTkButton(left_frame, text="Apply Changes", command=translate_text)
+translate_button.grid(row=20, column=1, padx=10)
+
+#For messageboxes
+def translate_error_messages():
+    selected_language = translated_combo.get()
+    global translations_map
+    error_messages = translations_map.get("error_messages", {})
+    translated_error_messages = {}
+    for key, value in error_messages.items():
+        translated_value = translator.translate(value, dest=selected_language).text
+        translated_error_messages[key] = translated_value
+    translations_map["error_messages"] = translated_error_messages
+def display_error_message(key):
+    error_message = translations_map.get("error_messages", {}).get(key)
+    if error_message:
+        messagebox.showerror(translations_map.get("error_messages_title"), error_message)
+translations_map["error_messages"] = {
+    "number_error": "Please enter a number",
+    "non_zero_error": "Enter a non-zero value",
+    "positive_integer_error": "The number of terms must be a positive integer value",
+    "terms_error": "Number of terms must be a positive integer",
+    "overflow_error": "Overflow Error: Number too large"
+}
+translations_map["error_messages_title"] = "Error"
+
+
+# Bind the translation function
+translated_combo.bind("<<ComboboxSelected>>", lambda event: translate_error_messages())
+
+# Call function
+translate_error_messages()
+
+# Update the error messages
+def updated_translate_error_messages():
+    selected_language = translated_combo.get()
+    translate_error_messages()
+    display_error_message("number_error")
+    display_error_message("non_zero_error")
+    display_error_message("positive_integer_error")
+    display_error_message("terms_error")
+    display_error_message("overflow_error")
 
 
 root.mainloop()
