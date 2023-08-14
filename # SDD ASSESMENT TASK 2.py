@@ -13,13 +13,10 @@ ctk.set_default_color_theme("blue")
 
 #Creating a window
 root = ctk.CTk()
-root.geometry("1000x400")
+root.geometry("1000x600")
 root.title("Summing Program")
 root.resizable(width=True, height=True)
-#Setting window size
-minwidth = 800
-minheight = 700
-root.minsize(minwidth, minheight)
+
 
 #Creating a frame for labels
 label_frame = ctk.CTkFrame(root)
@@ -70,15 +67,15 @@ def change_scaling_event(selection):
     scale = int(selection.strip('%')) / 100
     ctk.set_widget_scaling(scale)
     if selection == "125%":
-        root.geometry("1200x550")
+        root.geometry("1200x900")
     elif selection == "100%":
-        root.geometry("1000x400")
+        root.geometry("1000x600")
     elif selection == "150%":
-        root.geometry("1300x650")
+        root.geometry("1360x1000")
     elif selection == "75%":
-        root.geometry("800x400")
+        root.geometry("800x500")
     elif selection == "50%":
-        root.geometry("500x300")
+        root.geometry("500x350")
 
 optionmenu_1 = ctk.CTkOptionMenu(left_frame, values=["50%", "75%", "100%", "125%", "150%"], command=change_scaling_event)
 optionmenu_1.grid(row=10, column=1, padx=50, pady=0)
