@@ -70,11 +70,11 @@ def change_scaling_event(selection):
     scale = int(selection.strip('%')) / 100
     ctk.set_widget_scaling(scale)
     if selection == "125%":
-        root.geometry("1200x500")
+        root.geometry("1200x550")
     elif selection == "100%":
         root.geometry("1000x400")
     elif selection == "150%":
-        root.geometry("1300x600")
+        root.geometry("1300x650")
     elif selection == "75%":
         root.geometry("800x400")
     elif selection == "50%":
